@@ -1,0 +1,64 @@
+# Node
+node_modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# TypeScript
+dist/
+build/
+*.tsbuildinfo
+
+# Environment & Sensitive
+.env
+.env.*
+!.env.example
+*.pem
+
+# Logs
+logs/
+*.log
+
+# Editor/IDE
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# MacOS/System
+.DS_Store
+Thumbs.db
+
+# Coverage & Output
+coverage/
+nyc_output/
+tmp/
+temp/
+*.out
+
+# Misc
+*.local
+*.bak
+*.swp
+*.tmp
+
+# Database dumps
+*.sqlite
+*.db
+*.sql
+dump.rdb
+
+# OS generated files
+Desktop.ini
+
+# Optional: Ignore test results, if any
+test-results/
+
+# Ignore generated files from migrations
+migrations/
+
+# Ignore files from AWS deployment (if created locally)
+.aws-sam/
