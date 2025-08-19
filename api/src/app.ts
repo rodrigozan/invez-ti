@@ -1,31 +1,44 @@
 // src/app.ts
-import express, { Application } from 'express';
+import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-// Importação das rotas
-// import investmentRoutes from './routes/investmentRoutes';
-// import userRoutes from './routes/userRoutes';
-// import comparisonRoutes from './routes/comparisonRoutes';
-
-// // Importação dos middlewares customizados
+import router from './router';
+import { Connection } from './database/MongoConnection';
 // import { errorMiddleware } from './middlewares/errorMiddleware';
 
-const app: Application = express();
+export class App {
+    public server: express.Application
 
-// Middlewares globais
-app.use(helmet());
-app.use(cors());
-app.use(morgan('dev'));
-app.use(express.json());
+    constructor() {
+        this.server = express()
+        this.middleware()
+        this.routes()        
+        this.connection()  
+        this.documentation()
 
-// Rotas
-// app.use('/api/investments', investmentRoutes);
-// app.use('/api/users', userRoutes);
-// app.use('/api/comparisons', comparisonRoutes);
+        this.server.get('/', (_req, res) => res.json({ message: 'root route' }))
+    }
 
-// // Middleware de tratamento de erros (deve ser o último!)
-// app.use(errorMiddleware);
+    private middleware() {
+        this.server.use(cors())
+        this.server.use(express.json())
+        this.server.use(helmet());
+        this.server.use(morgan('dev'));
+        //this.server.use(errorMiddleware);
+    }    
 
-export default app;
+    private routes() {
+        this.server.use('/api', router)
+    }
+
+    private documentation() {
+        //setupSwagger(this.server)
+    }
+
+    private async connection() {
+        await Connection.connect()
+    }
+
+}
