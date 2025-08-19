@@ -4,5 +4,5 @@
   ],
   "ext": ".ts,.js",
   "ignore": [],
-  "exec": "ts-node ./src/server.ts --port=4000"
+  "exec": "node --env-file=.env.dev -r ts-node/register ./src/server.ts --port=4000"
 }
