@@ -5,10 +5,10 @@ import InvestmentController from 'src/controllers/InvestmentController';
 const router = Router();
 const controller = InvestmentController;
 
-router.post('/', controller.create);
-router.get('/', controller.getAll);
-router.get('/:id', controller.getById);
-router.put('/:id', controller.update);
-router.delete('/:id', controller.delete);
+router.post('/investments', controller.create);
+router.get('/investments', controller.getAll);
+router.get('/investments:id', controller.getById);
+router.put('/investments:id', controller.update);
+router.delete('/investments:id', controller.delete);
 
 export default router;
