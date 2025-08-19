@@ -1,6 +1,5 @@
-// src/routes/investmentRoutes.ts
 import { Router } from 'express';
-import InvestmentController from 'src/controllers/InvestmentController';
+import InvestmentController from '../controllers/InvestmentController';
 
 const router = Router();
 const controller = InvestmentController;

@@ -1,11 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
 
 export default class BaseController<T> {
-  protected service: any;
+  protected service: {
+    create(data: any): Promise<T>;
+    find(filter?: any): Promise<T[]>;
+    findById(id: string): Promise<T | null>;
+    update(id: string, data: any): Promise<T | null>;
+    delete(id: string): Promise<T | null>;
+  };
 
-  constructor(service: any) {
+  constructor(service: {
+    create(data: any): Promise<T>;
+    find(filter?: any): Promise<T[]>;
+    findById(id: string): Promise<T | null>;
+    update(id: string, data: any): Promise<T | null>;
+    delete(id: string): Promise<T | null>;
+  }) {
     this.service = service;
-    // Bind dos métodos (opcional, útil para uso direto em rotas)
     this.create = this.create.bind(this);
     this.getAll = this.getAll.bind(this);
     this.getById = this.getById.bind(this);
@@ -16,54 +27,71 @@ export default class BaseController<T> {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const item = await this.service.create(req.body);
-      res.status(201).json(item);
+      return res.status(201).json(item);
     } catch (err) {
       next(err);
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
 
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const items = await this.service.find(req.query);
-      res.json(items);
+      return res.json(items);
     } catch (err) {
       next(err);
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
 
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const item = await this.service.findById(req.params.id);
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({ message: 'Missing id parameter' });
+      }
+      const item = await this.service.findById(id);
       if (!item) {
         return res.status(404).json({ message: 'Not found' });
       }
-      res.json(item);
+      return res.json(item);
     } catch (err) {
       next(err);
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const item = await this.service.update(req.params.id, req.body);
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({ message: 'Missing id parameter' });
+      }
+      const item = await this.service.update(id, req.body);
       if (!item) {
         return res.status(404).json({ message: 'Not found' });
       }
-      res.json(item);
+      return res.json(item);
     } catch (err) {
       next(err);
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const item = await this.service.delete(req.params.id);
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({ message: 'Missing id parameter' });
+      }
+      const item = await this.service.delete(id);
       if (!item) {
         return res.status(404).json({ message: 'Not found' });
       }
-      res.json({ message: 'Deleted successfully' });
+      return res.json({ message: 'Deleted successfully' });
     } catch (err) {
       next(err);
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
 }
